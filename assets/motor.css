@@ -1,0 +1,169 @@
+/* Estilos del motor de movimiento (tools/motor.js). Se copia a <web>/assets/motor.css.
+   Solo lo genérico; cada web da forma y color a sus piezas en su styles.css. */
+html.con-suave { scroll-behavior: auto; }
+.con-suave .franja > img, .con-suave .franja > video, .motor .franja > img, .motor .franja > video { animation: none !important; }
+
+/* Mientras arranca, lo que va a entrar animado no se ve (red de seguridad en motor.js) */
+.motor:not(.motor-llest) [data-split], .motor:not(.motor-llest) [data-reveal] { opacity: 0; }
+.split-linia { padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.captura [data-split], .captura [data-reveal] { opacity: 1 !important; transform: none !important; }
+
+/* Velo de entrada */
+.velo { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; background: var(--k-velo, var(--fons, #fff)); pointer-events: none; }
+.velo img, .velo svg { width: min(46vw, 260px); height: auto; }
+html:not(.js) .velo, .captura .velo { display: none; }
+
+/* Cinta */
+.cinta { overflow: hidden; }
+[data-cinta] { display: flex; width: max-content; will-change: transform; }
+.cinta-grup { display: flex; align-items: center; flex: none; }
+html:not(.motor) [data-cinta] { animation: m-cinta 40s linear infinite; }
+@keyframes m-cinta { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { html:not(.motor) [data-cinta] { animation: none; } }
+
+/* Anillo de texto */
+.anella { position: absolute; pointer-events: none; }
+.anella svg { display: block; width: 100%; height: 100%; overflow: visible; }
+html:not(.motor) [data-gira] { animation: m-gira 30s linear infinite; }
+@keyframes m-gira { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { html:not(.motor) [data-gira] { animation: none; } }
+
+/* Sección horizontal: en escritorio se fija y avanza; en el móvil, se desliza con el dedo */
+[data-horitzontal] .pista { display: flex; }
+@media (max-width: 1000px) {
+  [data-horitzontal] .pista { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  [data-horitzontal] .pista::-webkit-scrollbar { display: none; }
+  [data-horitzontal] .pista > * { scroll-snap-align: start; }
+}
+
+/* Carrusel que se arrastra */
+[data-arrossega] { display: flex; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; scroll-snap-type: x proximity; }
+[data-arrossega]::-webkit-scrollbar { display: none; }
+[data-arrossega] > * { flex: none; scroll-snap-align: start; }
+@media (hover: hover) and (pointer: fine) { [data-arrossega] { cursor: grab; } }
+[data-arrossega].arrossegant { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+[data-arrossega] img { -webkit-user-drag: none; user-select: none; }
+
+/* Pasador */
+.slider { position: relative; overflow: hidden; touch-action: pan-y; }
+.slider-pista { display: flex; transition: transform 800ms var(--ease, cubic-bezier(0.23, 1, 0.32, 1)); }
+.slide { flex: 0 0 100%; min-width: 0; }
+.slider-punts { display: flex; gap: 8px; justify-content: center; }
+.slider-punts button { width: 26px; height: 26px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+.slider-punts button::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: 0.25; transition: opacity 200ms, transform 200ms; }
+.slider-punts button[aria-current="true"]::before { opacity: 1; transform: scale(1.3); }
+@media (prefers-reduced-motion: reduce) { .slider-pista { transition: none; } }
+
+/* Foto flotante de las listas */
+.previsual-flota {
+  position: fixed; left: 0; top: 0; z-index: 60; width: 240px; aspect-ratio: 4 / 5; margin: -150px 0 0 -120px;
+  pointer-events: none; overflow: hidden; border-radius: var(--k-radi, 0px); opacity: 0;
+  transition: opacity 260ms ease; box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.45);
+}
+.previsual-flota img { width: 100%; height: 100%; object-fit: cover; scale: 0.92; transition: scale 500ms var(--ease, ease); }
+.previsual-flota.on { opacity: 1; }
+.previsual-flota.on img { scale: 1; }
+
+/* Lupa */
+[data-lupa] { position: relative; overflow: hidden; }
+@media (hover: hover) and (pointer: fine) { [data-lupa] { cursor: zoom-in; } }
+.lupa-lent {
+  position: absolute; width: 190px; height: 190px; border-radius: 50%; pointer-events: none; z-index: 3;
+  background-repeat: no-repeat; opacity: 0; transition: opacity 200ms ease;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 4px rgb(0 0 0 / 0.25), 0 18px 40px -10px rgb(0 0 0 / 0.55);
+}
+[data-lupa]:hover .lupa-lent { opacity: 1; }
+
+/* Luz que sigue al cursor (en táctil va sola, despacio) */
+@property --mx { syntax: "<percentage>"; inherits: true; initial-value: 50%; }
+@property --my { syntax: "<percentage>"; inherits: true; initial-value: 40%; }
+[data-llum] { --mx: 50%; --my: 40%; }
+.llum-sola { animation: m-llum 14s ease-in-out infinite alternate; }
+@keyframes m-llum { 0% { --mx: 30%; --my: 35%; } 50% { --mx: 70%; --my: 45%; } 100% { --mx: 45%; --my: 30%; } }
+@media (prefers-reduced-motion: reduce) { .llum-sola { animation: none; } }
+
+/* Inclinación 3D */
+[data-tilt] { transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transform-style: preserve-3d; will-change: transform; }
+
+/* Lo que entra desde un lado (o gira) no debe ensanchar la página */
+#smooth-content > main, #smooth-content > footer { overflow-x: clip; }
+
+/* =====================================================================
+   v4: pantalla de carga, aro del cursor, partículas, semana, mapa, cinta de fotos,
+   gracia en las fotos y variantes de aparición.
+   ===================================================================== */
+/* Pantalla de carga: cada web dibuja la suya dentro; aquí solo el marco */
+.carrega { position: fixed; inset: 0; z-index: 500; display: grid; place-items: center; overflow: hidden; --c: 0; }
+html.carregant { overflow: hidden; }
+html.carregant body { overflow: hidden; }
+.captura .carrega, html:not(.js) .carrega { display: none; }
+.carrega-pct { font-variant-numeric: tabular-nums; }
+
+/* Aro del cursor: pequeño, con el rótulo al lado (solo sobre [data-cursor]) */
+.cursor-anell { position: fixed; left: 0; top: 0; z-index: 450; pointer-events: none; mix-blend-mode: difference; color: #fff; }
+.cursor-anell::before { content: ""; position: absolute; width: 38px; height: 38px; margin: -19px 0 0 -19px; border: 1.5px solid currentColor; border-radius: 50%; opacity: 0; transform: scale(0.3); transition: opacity 220ms ease, transform 320ms cubic-bezier(0.23, 1, 0.32, 1); }
+.cursor-anell span { position: absolute; left: 28px; top: -9px; font: 600 0.78rem/1.2 system-ui, sans-serif; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; opacity: 0; transform: translateX(-6px); transition: opacity 220ms ease, transform 320ms cubic-bezier(0.23, 1, 0.32, 1); }
+.cursor-anell.on::before { opacity: 1; transform: none; }
+.cursor-anell.on span { opacity: 1; transform: none; }
+
+/* Partículas */
+[data-particules] { position: relative; }
+canvas.particules { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+/* Capas que siguen al ratón */
+[data-raton] { will-change: translate; }
+
+/* Semana en franjas */
+[data-setmana] { display: grid; gap: 4px; }
+.sm-hores { position: relative; height: 18px; margin-left: var(--sm-etiqueta, 92px); margin-right: var(--sm-text, 120px); font-size: 0.72rem; opacity: 0.6; }
+.sm-hores span { position: absolute; transform: translateX(-50%); }
+.sm-fila { display: grid; grid-template-columns: var(--sm-etiqueta, 92px) minmax(0, 1fr) var(--sm-text, 120px); align-items: center; gap: 0; min-height: 38px; }
+.sm-dia { font-weight: 600; }
+.sm-pista { position: relative; height: 12px; border-radius: 6px; background: var(--sm-fons, rgb(128 128 128 / 0.14)); }
+.sm-pista i { position: absolute; top: 0; bottom: 0; border-radius: 6px; background: var(--sm-color, currentColor); transform-origin: left center; animation: sm-creix 900ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+@keyframes sm-creix { from { transform: scaleX(0); } }
+.sm-ara { position: absolute; top: -7px; bottom: -7px; width: 3px; margin-left: -1.5px; border-radius: 2px; background: var(--sm-ara, #e0423a); box-shadow: 0 0 0 3px rgb(224 66 58 / 0.18); }
+.sm-ara::after { content: ""; position: absolute; left: 50%; top: -6px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: inherit; animation: sm-pols 1.8s ease-in-out infinite; }
+@keyframes sm-pols { 50% { transform: scale(1.5); opacity: 0.5; } }
+.sm-text { text-align: right; font-size: 0.9rem; font-variant-numeric: tabular-nums; opacity: 0.8; }
+.sm-avui .sm-dia, .sm-avui .sm-text { opacity: 1; font-weight: 700; }
+.sm-tancat .sm-dia { opacity: 0.55; }
+[data-compte] { font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) {
+  .sm-fila { grid-template-columns: 74px minmax(0, 1fr); grid-template-rows: auto auto; row-gap: 2px; padding: 4px 0; }
+  .sm-text { grid-column: 2; text-align: left; font-size: 0.82rem; }
+  .sm-hores { margin-left: 74px; margin-right: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .sm-pista i, .sm-ara::after { animation: none; } }
+
+/* Mapa a demanda (no se carga nada de Google hasta tocar el botón) */
+[data-mapa-q] { position: relative; overflow: hidden; }
+[data-mapa-q] iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; opacity: 0; transition: opacity 500ms ease; }
+[data-mapa-q].viu iframe { opacity: 1; }
+[data-mapa-q].viu [data-mapa-boto] { display: none; }
+
+/* Cinta de fotos */
+.cinta-fotos .cinta-grup { gap: clamp(10px, 1.4vw, 18px); padding-right: clamp(10px, 1.4vw, 18px); }
+.cinta-fotos .cinta-grup img { height: clamp(130px, 17vw, 240px); width: auto; aspect-ratio: 4 / 5; object-fit: cover; flex: none; border-radius: var(--k-radi, 0px); }
+.cinta-fotos .cinta-grup img:nth-child(3n + 2) { aspect-ratio: 1; }
+.cinta-fotos .cinta-grup img:nth-child(4n) { aspect-ratio: 3 / 4; transform: translateY(14px); }
+
+/* Gracia en las fotos: acercamiento suave al pasar (con scale, sin pisar el transform de GSAP) */
+.marc { overflow: hidden; }
+.marc img, .marc video { transition: scale 900ms cubic-bezier(0.23, 1, 0.32, 1), filter 600ms ease; }
+@media (hover: hover) and (pointer: fine) { .marc:hover img, .marc:hover video { scale: 1.06; } }
+/* Brillo que cruza la foto al pasar (.brill) */
+.brill { position: relative; overflow: hidden; }
+.brill::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.42) 50%, transparent 65%); transform: translateX(-120%); }
+@media (hover: hover) and (pointer: fine) { .brill:hover::after { transform: translateX(120%); transition: transform 900ms cubic-bezier(0.23, 1, 0.32, 1); } }
+
+/* ---------- v5: portada de letras (data-mascara) ---------- */
+[data-mascara] { position: relative; min-height: 100vh; min-height: 100svh; overflow: hidden; isolation: isolate; }
+.mz-capa { position: absolute; inset: -2px; z-index: 2; display: grid; place-content: center; background: #000; color: #fff; mix-blend-mode: multiply; pointer-events: none; will-change: transform; }
+html:not(.motor) .mz-capa, .captura .mz-capa { display: none; }
+html:not(.motor) [data-mascara], .captura [data-mascara] { --p: 1 !important; }
+
+/* ---------- v5: capa que se rasca (data-rasca) ---------- */
+[data-rasca] { position: relative; }
+.rasca-capa { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; touch-action: pan-y; cursor: crosshair; transition: opacity 800ms ease; }
+.rasca-neta .rasca-capa { opacity: 0; pointer-events: none; }

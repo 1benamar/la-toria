@@ -1,0 +1,48 @@
+/* La Tòria v4: Syne y Monoton, carga del neón, portada con brasas, «TAPES» gigante,
+   cartel de neón OBERT/TANCAT y sello, cinta de fotos y visita de neón. */
+:root { --k-sello-fons: #0b0809; --k-sello-tinta: #ffd9dc; --k-setmana-fons: #120d0e; --k-mapa-fons: #171112; --sm-color: var(--neo); --sm-fons: rgb(255 255 255 / 0.07); --sm-ara: #fff; }
+h1, h2, .cinta-grup span, .nota-num, .neons .slide p { font-family: "Syne", "Hanken Grotesk", sans-serif; }
+h1 { font-weight: 800; letter-spacing: -0.03em; }
+h2 { font-weight: 700; letter-spacing: -0.02em; }
+.heroi-t h1 { font-size: clamp(2.6rem, 5.4vw, 5.2rem); line-height: 0.98; }
+.cinta-grup span { font-weight: 700; }
+.neons .slide p { font-weight: 600; }
+
+/* ---------- Pantalla de carga: el neón ---------- */
+.carrega-toria { display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(ellipse at 50% 45%, #241416, #0b0809 70%); }
+.ct-neo { font-family: "Sacramento", cursive; font-size: clamp(5rem, 14vw, 9rem); line-height: 0.9; color: #ffd9dc; opacity: calc(0.12 + var(--c) * 0.88); text-shadow: 0 0 2px #fff, 0 0 calc(var(--c) * 10px) var(--neo), 0 0 calc(var(--c) * 30px) rgb(255 60 80 / 0.8), 0 0 calc(var(--c) * 70px) rgb(255 40 60 / 0.5); animation: ct-pampalluga 1.6s steps(1, end) infinite; }
+@keyframes ct-pampalluga { 0%, 100% { filter: brightness(1); } 8% { filter: brightness(0.35); } 12% { filter: brightness(1); } 47% { filter: brightness(0.6); } 50% { filter: brightness(1); } }
+.ct-pct { margin-top: 18px; font-family: "Monoton", "Syne", sans-serif; font-size: clamp(2.6rem, 6vw, 4rem); line-height: 1; color: #ffe3e6; text-shadow: 0 0 8px var(--neo), 0 0 24px rgb(255 60 80 / 0.6); font-variant-numeric: tabular-nums; }
+.ct-lema { margin-top: 12px; font-size: 0.85rem; letter-spacing: 0.12em; color: rgb(255 255 255 / 0.45); }
+.carrega-toria.surt { animation: ct-surt 0.9s ease forwards; }
+@keyframes ct-surt { 0% { opacity: 1; } 18% { opacity: 1; filter: brightness(2.2); } 100% { opacity: 0; filter: brightness(0.4); } }
+
+/* ---------- Portada: TAPES, neón de estado y sello ---------- */
+.heroi-t-cos { position: relative; z-index: 2; }
+.heroi-t-tapes { position: absolute; z-index: -1; right: -2%; top: 14%; margin: 0; font-family: "Monoton", sans-serif; font-size: clamp(5rem, 15vw, 15rem); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgb(255 77 94 / 0.35); text-shadow: 0 0 30px rgb(255 77 94 / 0.25); pointer-events: none; animation: tapes 6s steps(1, end) infinite; }
+@keyframes tapes { 0%, 100% { opacity: 1; } 62% { opacity: 0.35; } 64% { opacity: 1; } 66% { opacity: 0.5; } 68% { opacity: 1; } }
+.neo-estat { position: absolute; z-index: 2; right: clamp(20px, 7vw, 120px); top: calc(var(--barra) + 40px); padding: 10px 18px; border: 2px solid rgb(255 77 94 / 0.85); border-radius: 12px; font-family: "Monoton", sans-serif; font-size: clamp(1.4rem, 2.6vw, 2.2rem); letter-spacing: 0.06em; color: #ffe3e6; text-shadow: 0 0 6px var(--neo), 0 0 20px rgb(255 60 80 / 0.7); box-shadow: 0 0 18px rgb(255 77 94 / 0.55), inset 0 0 14px rgb(255 77 94 / 0.35); transform: rotate(-4deg); }
+.neo-estat.tancat { opacity: 0.45; filter: saturate(0.4); box-shadow: none; text-shadow: none; animation: neo-mor 4s steps(1, end) infinite; }
+@keyframes neo-mor { 0%, 100% { opacity: 0.45; } 30% { opacity: 0.2; } 32% { opacity: 0.5; } }
+.heroi-t-sello { width: clamp(100px, 9vw, 136px); height: clamp(100px, 9vw, 136px); right: clamp(30px, 10vw, 180px); bottom: 18%; z-index: 2; padding: 6px; border-radius: 50%; background: rgb(11 8 9 / 0.75); border: 1px solid rgb(255 77 94 / 0.5); box-shadow: 0 0 20px rgb(255 77 94 / 0.25); }
+.heroi-t-sello text { font-family: "Syne", sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; fill: #ffd9dc; }
+@media (prefers-reduced-motion: reduce) { .ct-neo, .heroi-t-tapes, .neo-estat.tancat { animation: none; } }
+
+/* ---------- Cinta de fotos ---------- */
+.cinta-fotos { padding: 22px 0; background: #0b0809; border-block: 1px solid #3a2326; }
+.cinta-fotos .cinta-grup img { border-radius: 6px; box-shadow: 0 0 0 1px rgb(255 77 94 / 0.25); }
+
+/* ---------- Galería: halo de neón al pasar ---------- */
+@media (hover: hover) and (pointer: fine) { .galeria .g:hover { box-shadow: 0 0 0 2px var(--neo), 0 0 26px rgb(255 77 94 / 0.45); } }
+
+/* ---------- Visita de neón ---------- */
+.v4-toria .v4-setmana { border: 1px solid rgb(255 77 94 / 0.4); box-shadow: 0 0 30px rgb(255 77 94 / 0.12), inset 0 0 30px rgb(255 77 94 / 0.06); }
+.v4-toria .v4-tit { font-family: "Monoton", sans-serif; font-weight: 400; font-size: 1.3rem; letter-spacing: 0.06em; color: #ffe3e6; text-shadow: 0 0 10px var(--neo); }
+.v4-toria .sm-pista i { box-shadow: 0 0 14px rgb(255 77 94 / 0.7); }
+.v4-toria .v4-foto .marc { border-radius: 6px; box-shadow: 0 0 0 1px rgb(255 77 94 / 0.4), 0 0 40px rgb(255 77 94 / 0.25); }
+.v4-toria .v4-mapa-fons { background: repeating-linear-gradient(28deg, transparent 0 46px, rgb(255 77 94 / 0.08) 46px 50px), repeating-linear-gradient(-62deg, transparent 0 74px, rgb(255 255 255 / 0.04) 74px 78px), #171112; }
+.v4-toria .v4-pin { background: var(--neo); box-shadow: 0 0 20px var(--neo); }
+.v4-toria .v4-mapa-boto { background: var(--neo); color: #fff; box-shadow: 0 0 22px rgb(255 77 94 / 0.5); }
+.v4-toria .v4-compte { background: rgb(255 255 255 / 0.07); }
+.v4-toria .v4-compte[data-obert="si"] { background: rgb(255 77 94 / 0.18); color: #ffd9dc; }
+.v4-toria .v4-contacte a, .v4-toria address { color: var(--tinta); }

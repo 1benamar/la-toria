@@ -1,0 +1,204 @@
+/* La Tòria v5: «Una nit a La Tòria». La página es una noche de 18:00 a 00:00: cielo fijo que pasa de
+   la hora azul a la noche cerrada (--nit lo pone el reloj del motor), grano de película, rótulos de
+   hora en hueco con el nombre del capítulo en neón, y un HUD con el reloj y la regla de horas. */
+body { background: transparent; }
+html { background: #050407; }
+
+/* ---------- Cielo y grano ---------- */
+.cel { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(120% 70% at 50% 0%, #15123a 0%, transparent 62%), linear-gradient(#08070e, #050407); }
+.cel::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #1b2152 0%, #33245a 42%, #6a2f46 76%, #8a3f2f 100%); opacity: calc(1 - var(--nit, 0) * 1.3); }
+.cel-estels { position: absolute; inset: 0; opacity: calc(var(--nit, 0) * 1.3 - 0.2);
+  background-image: radial-gradient(1.2px 1.2px at 12% 18%, #fff 50%, transparent 52%), radial-gradient(1px 1px at 68% 9%, #fff 50%, transparent 52%), radial-gradient(1.4px 1.4px at 84% 31%, #ffe 50%, transparent 52%), radial-gradient(1px 1px at 33% 41%, #fff 50%, transparent 52%), radial-gradient(1px 1px at 52% 24%, #dfe6ff 50%, transparent 52%), radial-gradient(1.3px 1.3px at 7% 63%, #fff 50%, transparent 52%), radial-gradient(1px 1px at 91% 72%, #fff 50%, transparent 52%), radial-gradient(1px 1px at 44% 79%, #fff 50%, transparent 52%);
+  background-size: 420px 380px; }
+.cel-estels::after { content: ""; position: absolute; inset: 0; background: inherit; background-size: 610px 540px; background-position: 120px 60px; animation: estels 5s ease-in-out infinite alternate; }
+@keyframes estels { from { opacity: 0.25; } to { opacity: 1; } }
+.cel-horitzo { position: absolute; inset: auto 0 0; height: 60vh; background: radial-gradient(70% 55% at 50% 110%, rgb(255 60 84 / 0.26), transparent 70%); transition: opacity 600ms ease; }
+.gra { position: fixed; inset: 0; z-index: 70; overflow: hidden; pointer-events: none; opacity: 0.07; }
+.gra::before { content: ""; position: absolute; inset: -50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: gra 0.9s steps(4) infinite; }
+@keyframes gra { 0% { transform: translate(0, 0); } 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -1%); } 100% { transform: translate(1%, 3%); } }
+
+/* Las secciones dejan ver el cielo */
+.tiquet-sec, .neons, .copes, .barra-h, .raco5, .tanquem { background: transparent; }
+.cinta { background: var(--neo); border: 0; }
+.cinta-grup span { color: #1a0709; }
+.cinta-grup i { background: #1a0709; box-shadow: none; }
+
+/* ---------- Rótulo de hora: la hora en hueco y el capítulo en neón encima ---------- */
+.hora { position: relative; display: grid; place-items: center; margin: 0 0 clamp(4px, 1vw, 12px); line-height: 1; user-select: none; }
+.hora > * { grid-area: 1 / 1; }
+.hora-num { font-family: "Syne", sans-serif; font-weight: 800; font-size: clamp(5.4rem, 15vw, 14.5rem); letter-spacing: -0.045em; color: transparent; -webkit-text-stroke: 1.5px rgb(255 255 255 / 0.2); font-variant-numeric: tabular-nums; }
+.hora-neo { font-family: "Sacramento", cursive; font-size: clamp(3.2rem, 7vw, 6.6rem); color: #ffe4e7; white-space: nowrap; transform: rotate(-7deg) translateY(6%);
+  text-shadow: 0 0 2px #fff, 0 0 9px var(--neo), 0 0 24px rgb(255 60 80 / 0.8), 0 0 56px rgb(255 40 60 / 0.5); animation: tremola 7s steps(1) infinite; transition: color 300ms ease, text-shadow 300ms ease; }
+.cap5:nth-of-type(odd) .hora-neo { animation-delay: -3.2s; }
+@keyframes tremola { 0%, 61%, 64%, 67%, 100% { opacity: 1; } 62% { opacity: 0.3; } 65% { opacity: 0.55; } }
+.cap5 h2 { font-size: clamp(2rem, 3.6vw, 3.4rem); line-height: 1.02; text-wrap: balance; }
+
+/* ---------- 18:00 · Portada de letras ---------- */
+.nit-portada { height: 100vh; height: 100svh; min-height: 560px; padding: 0; background: #000; color: #fff; }
+.np-video { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(1.2) contrast(1.06) brightness(calc(1.45 - var(--p, 1) * 0.45)); scale: calc(1.16 - var(--p, 1) * 0.16); }
+.np-fosc { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: clamp(0, calc((var(--p, 1) - 0.5) * 2.4), 1);
+  background: linear-gradient(90deg, rgb(5 4 7 / 0.9) 0%, rgb(5 4 7 / 0.55) 42%, transparent 75%), linear-gradient(0deg, rgb(5 4 7 / 0.85), transparent 45%); }
+.mz-text { margin: 0; font-family: "Syne", sans-serif; font-weight: 800; text-transform: uppercase; text-align: center; line-height: 0.82; }
+.mz-la { display: block; font-size: clamp(1.6rem, 4.4vw, 4.6rem); letter-spacing: 0.5em; margin: 0 -0.5em 0.18em 0; }
+.mz-nom { display: block; font-size: min(16.4vw, 40vh); letter-spacing: -0.045em; }
+.np-espurnes { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.np-cantó { position: absolute; z-index: 4; bottom: clamp(18px, 4vh, 40px); margin: 0; display: flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgb(255 255 255 / 0.72); opacity: clamp(0, calc(1 - var(--p, 1) * 5), 1); }
+.np-adr { left: var(--marge); }
+.np-baixa { right: var(--marge); }
+.np-baixa .i { width: 16px; height: 16px; fill: currentColor; animation: baixa 1.6s var(--ease) infinite; }
+@keyframes baixa { 0%, 100% { transform: translateY(-3px); } 50% { transform: translateY(4px); } }
+.nit-portada .neo-estat { z-index: 4; scale: clamp(0, calc((var(--p, 1) - 0.6) * 5), 1); transform-origin: 100% 0; }
+.np-cos { position: relative; z-index: 4; height: 100%; display: grid; align-content: end; justify-items: start; padding: 0 var(--marge) clamp(36px, 9vh, 96px); max-width: 1180px;
+  opacity: clamp(0, calc((var(--p, 1) - 0.62) * 4), 1); translate: 0 calc((1 - clamp(0, calc((var(--p, 1) - 0.62) * 4), 1)) * 50px); }
+.motor .nit-portada:not(.mz-fet) .np-cos, .motor .nit-portada:not(.mz-fet) .neo-estat { visibility: hidden; }
+.np-neo { font-size: clamp(3.8rem, 7vw, 6.4rem); margin: 0 0 6px; }
+.np-cos h1 { font-size: clamp(2.5rem, 5.4vw, 5.4rem); line-height: 0.98; max-width: 15ch; margin: 0; text-wrap: balance; }
+.np-sub { margin: 18px 0 0; max-width: 46ch; color: rgb(255 255 255 / 0.78); font-size: clamp(1rem, 1.3vw, 1.15rem); }
+.np-accions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.np-estat { margin: 22px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.4em 1.1em; font-size: 0.92rem; color: rgb(255 255 255 / 0.72); }
+.np-estat .i { width: 14px; height: 14px; color: var(--neo); vertical-align: -2px; }
+
+/* ---------- 19:00 · La pissarra ---------- */
+.tiquet-sec .cap { max-width: 760px; }
+.tiquet-sec .plats img { filter: saturate(1.05); }
+
+/* ---------- 20:00 · Copes: las palabras se encienden de una en una ---------- */
+.copes { padding: 0; height: 100vh; height: 100svh; min-height: 600px; overflow: hidden; }
+.copes-in { height: 100%; max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 0.45fr); align-items: center; gap: clamp(20px, 3vw, 48px); padding: calc(var(--barra) + 16px) clamp(var(--marge), 7vw, 110px) 32px var(--marge); }
+.copes-cap .hora { place-items: start; }
+.copes-cap .hora-num { font-size: clamp(4.2rem, 5.6vw, 6.4rem); }
+.copes-cap .hora-neo { font-size: clamp(2.8rem, 4vw, 4.4rem); translate: 14% 0; }
+.copes-cap h2 { font-size: clamp(1.7rem, 2.6vw, 2.5rem); margin: 0; }
+.copes-cap p { margin: 14px 0 0; max-width: 34ch; color: var(--suau); }
+.copes-mots { list-style: none; margin: 0; padding: 0; font-family: "Syne", sans-serif; font-weight: 800; font-size: clamp(3rem, 6.2vw, 6.6rem); line-height: 1.1; text-transform: uppercase; letter-spacing: -0.035em; transform: translateY(calc((2 - var(--p, 0) * 4) * 1.1em)); }
+.copes-mots li { --d: calc(var(--p, 0) * 4 - var(--i)); --on: clamp(0, calc(1 - max(var(--d), -1 * var(--d)) * 1.5), 1); white-space: nowrap;
+  color: rgb(var(--neo-c) / var(--on)); -webkit-text-stroke: 1px rgb(255 255 255 / calc(0.26 - var(--on) * 0.26));
+  text-shadow: 0 0 3px rgb(255 255 255 / calc(var(--on) * 0.75)), 0 0 18px rgb(var(--neo-c) / calc(var(--on) * 0.9)), 0 0 64px rgb(var(--neo-c) / calc(var(--on) * 0.55)); }
+.copes-foto { margin: 0; align-self: center; rotate: 4deg; }
+.copes-foto img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; filter: brightness(0.82) saturate(0.95); box-shadow: 0 30px 60px -30px #000, 0 0 0 1px rgb(255 255 255 / 0.08); }
+html:not(.motor) .copes, .captura .copes { height: auto; }
+html:not(.motor) .copes-mots, .captura .copes-mots { transform: none; }
+html:not(.motor) .copes-mots li, .captura .copes-mots li { --on: 1; }
+
+/* ---------- 21:00 · La barra en horizontal ---------- */
+.barra-h { padding: 0; }
+.barra-h .pista { align-items: center; gap: clamp(16px, 2vw, 30px); height: 100vh; height: 100svh; min-height: 560px; padding: calc(var(--barra) + 24px) var(--marge) 48px; }
+.bh-cap { flex: none; width: min(440px, 84vw); }
+.bh-cap .hora { place-items: start; }
+.bh-cap .hora-num { font-size: clamp(4.2rem, 6.2vw, 7rem); }
+.bh-cap .hora-neo { font-size: clamp(2.8rem, 4vw, 4.4rem); translate: 14% 0; }
+.bh-cap h2 { margin: 0; }
+.bh-cap p { margin: 14px 0 0; color: var(--suau); max-width: 34ch; }
+.bh-item { flex: none; position: relative; display: block; height: min(62vh, 560px); aspect-ratio: 4 / 3; margin: 0; border-radius: 4px; overflow: hidden; background: #140f11; color: #fff; box-shadow: 0 30px 60px -34px #000; }
+.bh-alta, .bh-vid { aspect-ratio: 3 / 4; }
+.bh-item:nth-of-type(even) { translate: 0 5vh; }
+.bh-item:nth-of-type(3n) { translate: 0 -4vh; }
+.bh-item img, .bh-item video { width: 100%; height: 100%; object-fit: cover; transition: scale 900ms var(--ease), filter 600ms ease; }
+.bh-item::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08); transition: box-shadow 400ms ease; }
+.bh-peu { position: absolute; z-index: 1; left: 14px; right: 14px; bottom: 10px; display: flex; align-items: baseline; gap: 10px; text-shadow: 0 1px 14px rgb(0 0 0 / 0.8); }
+.bh-peu b { font-family: "Syne", sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; color: #ff8a95; }
+.bh-peu span { font-family: "Sacramento", cursive; font-size: 2.3rem; line-height: 1; }
+@media (hover: hover) and (pointer: fine) {
+  a.bh-item:hover img { scale: 1.07; }
+  a.bh-item:hover::after { box-shadow: inset 0 0 0 1px rgb(255 77 94 / 0.7), 0 0 34px rgb(255 77 94 / 0.35); }
+}
+a.bh-item:focus-visible { outline: 2px solid var(--neo); outline-offset: 4px; }
+.bh-fi { flex: none; width: min(46vw, 560px); display: grid; place-items: center; }
+.bh-fi .neo { font-size: clamp(4.6rem, 9vw, 8.6rem); margin: 0; rotate: -6deg; }
+
+/* ---------- 22:00 · El racó: la foto se abre como una ventana ---------- */
+.raco5 { padding-inline: 0; }
+.raco5-cap { text-align: center; padding: 0 var(--marge); }
+.raco5-cap h2 { margin: 0 auto; }
+.raco5-finestra { margin: clamp(28px, 4vw, 52px) 0 0; height: 88vh; height: 88svh; overflow: hidden;
+  clip-path: inset(calc((1 - var(--p, 1)) * 24%) calc((1 - var(--p, 1)) * 33%) round calc((1 - var(--p, 1)) * 220px)); }
+.raco5-finestra img { width: 100%; height: 100%; object-fit: cover; scale: calc(1.28 - var(--p, 1) * 0.28); }
+.raco5-dos { max-width: var(--max); margin: clamp(48px, 7vw, 96px) auto 0; padding: 0 var(--marge); display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr) minmax(0, 0.8fr); gap: clamp(20px, 3vw, 44px); align-items: start; }
+.raco5-text { margin: 0; align-self: center; font-size: clamp(1.15rem, 1.6vw, 1.4rem); line-height: 1.5; color: rgb(255 255 255 / 0.86); }
+.raco5-dos figure { margin: 0; overflow: hidden; border-radius: 4px; }
+.raco5-dos img { width: 100%; height: auto; display: block; }
+.raco5-f2 { margin-top: clamp(40px, 9vw, 140px) !important; }
+
+/* ---------- 23:00 · Opiniones ---------- */
+.neons-cap .hora { margin-bottom: 0; }
+
+/* ---------- 00:00 · Tanquem: el interruptor del neón ---------- */
+.tanquem { min-height: 92vh; min-height: 92svh; display: grid; align-content: center; justify-items: center; text-align: center; gap: 8px; }
+.tanquem .hora-neo { display: none; }
+.tanquem .hora-num { -webkit-text-stroke-color: rgb(255 255 255 / 0.12); }
+.tanquem-neo { font-size: clamp(5rem, 13vw, 11rem); margin: -0.62em 0 0; position: relative; }
+.tanquem h2 { margin: 6px 0 0; }
+.tanquem-estat { margin: 6px 0 0; color: var(--suau); }
+.interruptor { margin-top: 26px; display: inline-flex; align-items: center; gap: 16px; padding: 8px 12px; border: 0; background: none; color: var(--tinta); font: inherit; font-weight: 600; cursor: pointer; border-radius: 12px; }
+.interruptor:focus-visible { outline: 2px solid var(--neo); outline-offset: 4px; }
+.int-placa { width: 48px; height: 76px; border-radius: 9px; display: grid; place-items: center; background: linear-gradient(#f4f0e9, #d6cfc5); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.18), 0 12px 24px -10px rgb(0 0 0 / 0.7); }
+.int-pal { width: 18px; height: 36px; border-radius: 5px; background: linear-gradient(#fff 0 50%, #cfc7bb 50%); box-shadow: 0 2px 4px rgb(0 0 0 / 0.25); transform: perspective(90px) rotateX(20deg); transition: transform 220ms var(--ease-ui); }
+.interruptor[aria-pressed="true"] .int-pal { transform: perspective(90px) rotateX(-20deg); background: linear-gradient(#cfc7bb 0 50%, #fff 50%); }
+.interruptor:active .int-placa { scale: 0.97; }
+.neo, .neo-estat span, .copes-mots li, .neons .slide p { transition: color 320ms ease, text-shadow 320ms ease, opacity 320ms ease; }
+html.neo-apagat .neo, html.neo-apagat .hora-neo, html.neo-apagat .neo-estat span, html.neo-apagat .neons .slide p, html.neo-apagat .hud-rellotge span { color: #4b3f41 !important; text-shadow: none !important; animation: none !important; }
+html.neo-apagat .neo-estat { box-shadow: none !important; border-color: #4b3f41 !important; }
+html.neo-apagat .cel-horitzo { opacity: 0; }
+
+/* ---------- HUD: el reloj y la regla de horas ---------- */
+.hud { position: fixed; z-index: 26; right: clamp(12px, 1.6vw, 26px); top: 50%; translate: 0 -50%; display: grid; justify-items: end; gap: 20px; pointer-events: none; transition: opacity 500ms ease; }
+html.carregant .hud { opacity: 0; }
+.hud-rellotge { margin: 0; display: grid; justify-items: end; line-height: 1; }
+.hud-rellotge b { font-family: "Syne", sans-serif; font-weight: 700; font-size: 1.45rem; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; color: #fff; text-shadow: 0 0 14px rgb(255 77 94 / 0.55); }
+.hud-rellotge span { font-family: "Sacramento", cursive; font-size: 1.55rem; color: #ffd9dc; text-shadow: 0 0 8px var(--neo), 0 0 20px rgb(255 60 80 / 0.6); }
+.hud-regle { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; position: relative; pointer-events: auto; }
+.hud-regle::before, .hud-regle::after { content: ""; position: absolute; right: 3.5px; top: 8px; width: 1px; }
+.hud-regle::before { bottom: 8px; background: rgb(255 255 255 / 0.18); }
+.hud-regle::after { height: calc(var(--hp, 0) * (100% - 16px)); background: var(--neo); box-shadow: 0 0 8px var(--neo); }
+.hud-regle a { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-height: 22px; color: rgb(255 255 255 / 0.42); text-decoration: none; font-size: 0.72rem; letter-spacing: 0.06em; transition: color 250ms ease; }
+.hud-regle a b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.hud-regle a span { max-width: 0; overflow: hidden; white-space: nowrap; opacity: 0; transition: max-width 400ms var(--ease), opacity 300ms ease; }
+.hud-regle a::after { content: ""; flex: none; position: relative; z-index: 1; width: 8px; height: 8px; border-radius: 50%; background: #2a2224; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35); transition: background 250ms ease, box-shadow 250ms ease; }
+.hud-regle li.passat a::after { background: #8c2e39; box-shadow: none; }
+.hud-regle a[aria-current] { color: #fff; }
+.hud-regle a[aria-current]::after { background: var(--neo); box-shadow: 0 0 0 3px rgb(255 77 94 / 0.25), 0 0 12px var(--neo); }
+.hud-regle:hover a span, .hud-regle a:focus-visible span { max-width: 9em; opacity: 1; }
+.hud-regle a:focus-visible { outline: 2px solid var(--neo); outline-offset: 3px; border-radius: 4px; }
+@media (hover: hover) and (pointer: fine) { .hud-regle a:hover { color: #fff; } }
+
+/* ---------- Pantallas estrechas ---------- */
+@media (max-width: 1000px) {
+  .hud { top: calc((var(--barra) - 32px) / 2); right: auto; left: 50%; translate: -50% 0; justify-items: center; }
+  .hud-regle { display: none; }
+  .hud-rellotge { display: flex; align-items: baseline; gap: 8px; padding: 6px 14px 4px; border-radius: 999px; background: rgb(8 6 8 / 0.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgb(255 77 94 / 0.35); }
+  .hud-rellotge b { font-size: 1rem; }
+  .hud-rellotge span { font-size: 1.25rem; }
+  .copes-in { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; align-items: start; padding: calc(var(--barra) + 12px) var(--marge) 24px; gap: 8px; }
+  .copes-cap .hora-num { font-size: 4.6rem; }
+  .copes-cap .hora-neo { font-size: 2.8rem; }
+  .copes-cap p { display: none; }
+  .copes-mots { align-self: center; font-size: clamp(2.2rem, 10.2vw, 4.6rem); }
+  .copes-foto { display: none; }
+  .barra-h .pista { height: auto; min-height: 0; padding: 24px var(--marge) 40px; align-items: start; }
+  .bh-cap { width: 80vw; }
+  .bh-item { height: auto; width: 74vw; }
+  .bh-alta, .bh-vid { width: 62vw; }
+  .bh-item:nth-of-type(n) { translate: none; }
+  .bh-fi { width: 60vw; }
+  .raco5-finestra { height: 62svh; }
+  .raco5-dos { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); }
+  .raco5-text { grid-column: 1 / -1; }
+  .raco5-f2 { margin-top: 48px !important; }
+}
+@media (max-width: 600px) {
+  .np-adr { display: none; }
+  .np-cantó.np-baixa { right: auto; left: 50%; translate: -50% 0; bottom: calc(28px + env(safe-area-inset-bottom)); }
+  .mz-nom { font-size: 31vw; line-height: 0.86; }
+  .mz-ria { display: block; }
+  .mz-la { font-size: 7.5vw; margin-bottom: 0.7em; }
+  .np-neo { display: none; }
+  .np-fosc { background: linear-gradient(0deg, rgb(5 4 7 / 0.94) 0%, rgb(5 4 7 / 0.78) 48%, rgb(5 4 7 / 0.15) 80%); }
+  .np-cos h1 { font-size: clamp(2.2rem, 10vw, 3rem); }
+  .nit-portada .neo-estat { top: calc(var(--barra) + 16px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gra::before, .cel-estels::after, .hora-neo, .np-baixa .i { animation: none; }
+}

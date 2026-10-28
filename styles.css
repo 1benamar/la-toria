@@ -1,0 +1,185 @@
+/* La Tòria. Concepte: el tiquet. La carta de la pissarra impresa com un compte de bar.
+   Negre càlid de dins del local, os per al text i el vermell del neó com a únic accent. */
+:root {
+  --fons: #151112;
+  --fons-2: #1d1819;
+  --fons-3: #272122;
+  --tinta: #efe9e3;
+  --suau: #aba29a;
+  --linia: #332b2c;
+  --neo: #ff4d5e;
+  --neo-fosc: #e23a4c;
+  --paper: #f4f1ea;
+  --paper-tinta: #26201d;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-ui: cubic-bezier(0.2, 0, 0, 1);
+  --marge: clamp(16px, 4vw, 56px);
+  --max: 1280px;
+  --barra: 64px;
+  --k-accent: var(--neo);
+  --k-titol: "Hanken Grotesk", system-ui, sans-serif;
+  --k-peu: #0c0a0b;
+  --k-vel: 16 10 12;
+  --k-fosc: #151112;
+  --k-radi: 6px;
+  font-family: "Hanken Grotesk", system-ui, sans-serif;
+  color: var(--tinta);
+  background: var(--fons);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--barra) + 12px); -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--fons); font-size: 1.0625rem; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-underline-offset: 0.18em; }
+h1, h2, h3 { margin: 0; font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+::selection { background: var(--neo); color: #160a0b; }
+:focus-visible { outline: 2px solid var(--neo); outline-offset: 3px; border-radius: 4px; }
+.i { width: 1.15em; height: 1.15em; fill: currentColor; flex: none; }
+.saltar { position: absolute; left: -999px; top: 8px; background: var(--neo); color: #160a0b; padding: 8px 14px; z-index: 30; border-radius: 999px; }
+.saltar:focus { left: 12px; }
+
+.boto { display: inline-flex; align-items: center; gap: 0.55em; min-height: 48px; padding: 0 1.4em; border-radius: 999px; background: var(--tinta); color: var(--fons); font-weight: 600; text-decoration: none; border: 1px solid var(--tinta); white-space: nowrap; transition: transform 160ms var(--ease-ui), background-color 160ms var(--ease-ui), color 160ms var(--ease-ui), border-color 160ms var(--ease-ui); }
+.boto:active { transform: scale(0.96); }
+.boto-linia { background: transparent; color: var(--tinta); border-color: #4d4344; }
+@media (hover: hover) and (pointer: fine) {
+  .boto:hover { background: var(--neo); border-color: var(--neo); color: #160a0b; }
+  .boto-linia:hover { background: var(--fons-3); border-color: var(--tinta); color: var(--tinta); }
+}
+
+.barra { position: sticky; top: 0; z-index: 20; height: var(--barra); display: flex; align-items: center; gap: 24px; padding: 0 var(--marge); background: color-mix(in oklab, var(--fons) 90%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--linia); }
+.barra-marca { font-family: "Sacramento", cursive; font-size: 2.1rem; line-height: 1; color: var(--neo); text-decoration: none; padding-top: 4px; }
+.barra-nav { display: flex; gap: 26px; margin-inline-start: auto; }
+.barra-nav a { text-decoration: none; color: var(--suau); padding: 8px 0; transition: color 160ms var(--ease-ui); }
+@media (hover: hover) and (pointer: fine) { .barra-nav a:hover { color: var(--tinta); } }
+.barra-fi { display: flex; align-items: center; }
+.idioma { display: inline-flex; border: 1px solid var(--linia); border-radius: 999px; padding: 3px; }
+.idioma button { font: inherit; font-size: 0.8rem; font-weight: 600; border: 0; background: none; color: var(--suau); min-width: 36px; min-height: 30px; border-radius: 999px; cursor: pointer; transition: background-color 160ms var(--ease-ui), color 160ms var(--ease-ui); }
+.idioma button[aria-pressed="true"] { background: var(--tinta); color: var(--fons); }
+
+/* Portada: el neó fa de rètol i s'encén un cop, quan carrega */
+.neo { font-family: "Sacramento", cursive; font-size: clamp(4.2rem, 8vw, 6.6rem); line-height: 0.9; color: #ffd9dc; text-shadow: 0 0 2px #fff, 0 0 8px var(--neo), 0 0 22px rgba(255, 60, 80, 0.75), 0 0 48px rgba(255, 40, 60, 0.45); margin-bottom: 26px; }
+.js .neo.rv.is-in { animation: encendre 1100ms steps(1, end) 200ms both; }
+@keyframes encendre { 0% { opacity: 0.15; } 18% { opacity: 1; } 24% { opacity: 0.35; } 34% { opacity: 1; } 40% { opacity: 0.6; } 48%, 100% { opacity: 1; } }
+.portada-neo { font-size: clamp(3.6rem, 6.4vw, 5.6rem); margin-bottom: clamp(10px, 2vh, 20px); }
+.js .portada-neo { animation: encendre 1100ms steps(1, end) 500ms both; }
+@media (prefers-reduced-motion: reduce) { .js .portada-neo { animation: none; } }
+.accions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.estat { margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5em; color: var(--suau); }
+.estat:empty { display: none; }
+.estat-txt { display: inline-flex; align-items: center; gap: 0.5em; color: var(--tinta); font-weight: 600; }
+.estat-txt::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #6d6364; }
+.estat[data-obert="si"] .estat-txt::before { background: var(--neo); box-shadow: 0 0 0 4px rgba(255, 77, 94, 0.18); }
+
+section { padding: clamp(72px, 10vw, 128px) var(--marge); }
+section h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+.cap { max-width: 640px; margin: 0 auto clamp(36px, 5vw, 56px); text-align: center; }
+.cap p { margin-top: 12px; color: var(--suau); }
+
+/* El tiquet */
+.tiquet-sec { background: var(--fons-2); }
+.tiquet-cos { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 400px) minmax(0, 1fr); gap: clamp(20px, 3vw, 48px); align-items: start; }
+.plats { display: grid; grid-template-columns: minmax(0, 290px); gap: 18px; }
+.plats-a { justify-content: end; }
+.plats-b { justify-content: start; margin-top: 60px; }
+.plats figure { margin: 0; }
+.plats img { border-radius: 6px; aspect-ratio: 1; object-fit: cover; outline: 1px solid oklch(1 0 0 / 0.1); outline-offset: -1px; }
+.plats figcaption { margin-top: 8px; font-size: 0.92rem; color: var(--suau); }
+.tiquet { position: relative; filter: drop-shadow(0 26px 30px rgba(0, 0, 0, 0.55)); }
+.tiquet-paper { position: relative; background: var(--paper); color: var(--paper-tinta); font-family: "Courier Prime", ui-monospace, monospace; font-size: 0.95rem; line-height: 1.45; padding: 34px 26px 38px; }
+/* Vores dentades de paper tèrmic */
+.tiquet-paper::before, .tiquet-paper::after { content: ""; position: absolute; inset-inline: 0; height: 10px; background: linear-gradient(135deg, var(--paper) 5px, transparent 0) 0 0 / 10px 10px, linear-gradient(-135deg, var(--paper) 5px, transparent 0) 0 0 / 10px 10px; }
+.tiquet-paper::before { top: -10px; transform: scaleY(-1); }
+.tiquet-paper::after { bottom: -10px; }
+.tq-cap { text-align: center; font-weight: 700; font-size: 1.25rem; letter-spacing: 0.1em; }
+.tq-adr { text-align: center; }
+.tq-sep { height: 0; border-top: 1px dashed #6e655f; margin: 12px 0; font-size: 0; }
+.tq-tit { font-weight: 700; margin-bottom: 8px; }
+.tq-linies { list-style: none; padding: 0; margin: 0; }
+.tq-linies li { display: grid; grid-template-columns: 1fr auto; gap: 14px; padding: 5px 0; align-items: baseline; }
+.tq-linies b { font-weight: 700; font-variant-numeric: tabular-nums; }
+.tq-peu { margin-top: 6px; }
+.tq-gracies { text-align: center; margin-top: 16px; font-weight: 700; }
+/* El tiquet "s'imprimeix": surt de dalt a baix quan entra a la vista */
+.js .tiquet.rv { opacity: 1; transform: none; }
+.js .tiquet.rv .tiquet-paper { clip-path: inset(-12px 0 100% 0); transform: translateY(-24px); }
+.js .tiquet.rv.is-in .tiquet-paper { clip-path: inset(-12px 0 -12px 0); transform: none; transition: clip-path 2200ms cubic-bezier(0.45, 0, 0.2, 1) 200ms, transform 2200ms cubic-bezier(0.45, 0, 0.2, 1) 200ms; }
+
+/* El racó */
+.raco { padding-inline: 0; }
+.raco-dos { max-width: var(--max); margin: clamp(40px, 6vw, 72px) auto 0; padding: 0 var(--marge); display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.7fr) minmax(0, 0.7fr); gap: clamp(16px, 3vw, 36px); align-items: end; }
+.raco-text p { margin-top: 14px; color: var(--suau); max-width: 42ch; }
+.raco-dos figure { margin: 0; }
+.raco-dos .rv-foto { overflow: hidden; border-radius: 6px; }
+.raco-dos img { border-radius: 6px; aspect-ratio: 4 / 5; object-fit: cover; outline: 1px solid oklch(1 0 0 / 0.1); outline-offset: -1px; }
+
+/* Galeria */
+.galeria-cap { text-align: center; max-width: 640px; margin: 0 auto clamp(32px, 5vw, 56px); }
+.galeria-cap p { margin-top: 12px; color: var(--suau); }
+.g { background: #221c1d; }
+.g > img, .g > video { outline-color: oklch(1 0 0 / 0.08); }
+
+/* Opinions */
+.opinions { max-width: var(--max); margin: 0 auto; }
+.opinions h2 { text-align: center; margin-bottom: clamp(36px, 5vw, 56px); }
+.opinions-llista { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 44px); }
+.opinions blockquote { margin: 0; padding: 26px; background: var(--fons-2); border-radius: 6px; border: 1px solid var(--linia); display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
+.opinions blockquote p { font-size: 1.08rem; line-height: 1.55; }
+.opinions footer { font-weight: 600; display: flex; flex-direction: column; }
+.opinions footer span { font-weight: 400; color: var(--suau); font-size: 0.9rem; }
+
+.visita { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(36px, 6vw, 96px); align-items: start; border-top: 1px solid var(--linia); }
+.visita address { font-style: normal; font-size: 1.25rem; margin-top: 22px; }
+.insta { display: inline-flex; align-items: center; gap: 0.45em; margin-top: 10px; font-size: 1.15rem; text-decoration: none; border-bottom: 1px solid #4d4344; }
+.horari { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.horari caption { text-align: start; font-weight: 600; padding-bottom: 12px; }
+.horari th, .horari td { padding: 13px 0; border-bottom: 1px solid var(--linia); text-align: start; font-weight: 400; }
+.horari td { text-align: end; color: var(--suau); }
+.horari tr.es-avui th, .horari tr.es-avui td { color: var(--neo); font-weight: 600; }
+
+.peu { text-align: center; padding: 64px var(--marge) 120px; border-top: 1px solid var(--linia); color: var(--suau); font-size: 0.95rem; }
+.peu-marca { font-family: "Sacramento", cursive; font-size: 3rem; line-height: 1; color: var(--neo); margin-bottom: 12px !important; }
+.peu p + p { margin-top: 8px; }
+.peu-demo { font-size: 0.85rem; }
+.barra-mobil { display: none; }
+
+.js .rv { opacity: 0; transform: translateY(14px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+.js .rv.is-in { opacity: 1; transform: none; }
+.plats figure.rv:nth-child(2) { transition-delay: 80ms; } .plats figure.rv:nth-child(3) { transition-delay: 160ms; } .plats figure.rv:nth-child(4) { transition-delay: 240ms; }
+@media (prefers-reduced-motion: reduce) {
+  .js .rv { transform: none; transition: opacity 400ms ease; }
+  .js .tiquet.rv .tiquet-paper { clip-path: none; transform: none; }
+  .js .neo.rv.is-in { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+@media (max-width: 1080px) {
+  .tiquet-cos { grid-template-columns: minmax(0, 1fr); max-width: 520px; }
+  .tiquet { order: -1; }
+  .plats { grid-template-columns: repeat(4, minmax(0, 1fr)); justify-content: stretch; }
+  .plats-b { margin-top: 0; }
+  .plats figcaption { font-size: 0.8rem; }
+}
+@media (max-width: 900px) {
+  .barra-nav { display: none; }
+  .barra-fi { margin-inline-start: auto; }
+  .visita { grid-template-columns: minmax(0, 1fr); }
+  .raco-dos { grid-template-columns: 1fr 1fr; }
+  .raco-text { grid-column: 1 / -1; }
+  .opinions-llista { grid-template-columns: minmax(0, 1fr); max-width: 560px; margin: 0 auto; }
+}
+@media (max-width: 760px) {
+  .barra-mobil { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; position: fixed; z-index: 25; inset-inline: 0; bottom: 0; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: color-mix(in oklab, var(--fons) 94%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--linia); }
+  .barra-mobil a { display: flex; align-items: center; justify-content: center; gap: 0.5em; min-height: 48px; border-radius: 999px; text-decoration: none; font-weight: 600; border: 1px solid #4d4344; }
+  .barra-mobil a:first-child { background: var(--tinta); color: var(--fons); border-color: var(--tinta); }
+  .barra-mobil a:active { transform: scale(0.96); }
+  .accions .boto { flex: 1 1 auto; justify-content: center; }
+  .plats { grid-template-columns: 1fr 1fr; }
+  .tiquet-paper { padding-inline: 18px; font-size: 0.9rem; }
+}
+
+/* Final de pàgina del kit */
+.visita-cos .estat { justify-content: flex-start; }
+.peu-k { border-top: 1px solid var(--linia); }
+.peu-k-marca .peu-marca { margin-bottom: 16px !important; }
